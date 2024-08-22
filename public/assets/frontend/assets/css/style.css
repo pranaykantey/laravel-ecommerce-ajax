@@ -6050,7 +6050,7 @@ progress {
  *
  * bootstrap-slider is released under the MIT License
  * Copyright (c) 2019 Kyle Kemp, Rohit Kalkur, and contributors
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -6059,10 +6059,10 @@ progress {
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -9886,6 +9886,22 @@ textarea.form-control-lg {
     transform-origin: 0 0;
     transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
     color: #767676; }
+
+.form-floating > label {
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    padding: 0;
+    pointer-events: none;
+    border: 0.125rem solid transparent;
+    transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+    color: #767676;
+    transform: translate(0, -50%);
+    text-transform: uppercase;
+    line-height: 1em;
+    background: white;
+    padding: 0 15px;
+}
     @media (prefers-reduced-motion: reduce) {
       .form-floating > label {
         transition: none; } }
@@ -15308,7 +15324,7 @@ button.js-add-wishlist.active .flaticon.flaticon-heart, a.add-to-wishlist.active
 .login-register {
   width: 40.625rem;
   max-width: 100%;
-  padding: 0 4.6875rem; }
+  padding: 10px 40px; }
   @media (max-width: 767.98px) {
     .login-register {
       padding: 0 1rem; } }
