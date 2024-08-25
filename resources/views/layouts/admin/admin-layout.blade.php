@@ -17,6 +17,7 @@
     <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/admin/css/sweetalert.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/admin/css/custom.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/admin/css/theme.css') }}">
 
 
     <script src="{{ asset('assets/admin/js/jquery.min.js') }}"></script>

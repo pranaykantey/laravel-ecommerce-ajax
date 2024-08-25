@@ -21,6 +21,6 @@ class IsUserAdmin
                 return $next($request);
             }
         }
-        return redirect()->route('/');
+        return redirect()->back();
     }
 }

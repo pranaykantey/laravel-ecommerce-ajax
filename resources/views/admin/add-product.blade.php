@@ -77,11 +77,10 @@
                         </div>
                         <div class="select">
                             <select class="" name="brand_id">
-                                <option>Choose Brand</option>
-                                <option value="1">Brand1</option>
-                                <option value="2">Brand2</option>
-                                <option value="3">Brand3</option>
-                                <option value="4">Brand4</option>
+                                <option value="">Choose Brand</option>
+                                @foreach ($brands as $brand)
+                                <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         @error('brand_id')

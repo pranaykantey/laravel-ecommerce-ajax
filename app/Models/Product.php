@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
@@ -12,7 +13,6 @@ class Product extends Model
     protected $fillable = [
         'title',
         'slug',
-        'brand_id',
         'description',
         'image',
         'short_description',
@@ -23,6 +23,28 @@ class Product extends Model
         'quantity',
         'stock_status',
         'featured',
-        'product_category_id',
+        'user_id',
+        'brand_id',
     ];
+
+    /**
+     * Get the brand associated with the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function brand(): belongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    /**
+     * Get the user that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

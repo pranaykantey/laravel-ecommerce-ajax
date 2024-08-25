@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\BrandProductRelationship;
 use App\Models\Product;
+// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductController extends Controller
 {
@@ -12,7 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with(['user','brand'])->orderBy('id', 'DESC')->get();
+        return view('admin.products', compact('products'));
     }
 
     /**
@@ -20,7 +26,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.add-product');
+        $brands = Brand::orderBy('id','DESC')->get();
+        return view('admin.add-product', compact('brands'));
     }
 
     /**
@@ -31,7 +38,6 @@ class ProductController extends Controller
         $fields = $request->validate([
             'title'                 =>  ['required'],
             'slug'                  =>  ['required'],
-            'brand_id'              =>  ['required'],
             'description'           =>  ['required'],
             'image'                 =>  ['required'],
             'short_description'     =>  ['required'],
@@ -43,11 +49,21 @@ class ProductController extends Controller
             'stock_status'          =>  ['nullable'],
             'featured'              =>  ['nullable'],
             'product_category_id'   =>  ['nullable'],
+            'brand_id'              =>  ['nullable'],
         ]);
+
+        // $fields['brand_name']       = '';
+        $fields['user_id']          = Auth::id();
 
         $productCreate = Product::create($fields);
 
+        // $productCreate->brand()->create([
+        //     'brand_id'          => $request->brand_id,
+        //     'product_id'        => $productCreate->ID
+        // ]);
+
         return response()->json(['message'=>'Product Added Successfully']);
+        // return response()->json(['message'=>'Product Added Successfully']);
     }
 
     /**

@@ -1,0 +1,14 @@
+.alert.alert-danger {
+	border-radius: 25px;
+	padding-left: 28px;
+	border-width: 3px;
+	border-color: #fd9191;
+	background: white;
+}
+.alert.alert-success {
+	border-radius: 25px;
+	padding-left: 28px;
+	border-width: 3px;
+	border-color: #90ffae;
+	background: white;
+}

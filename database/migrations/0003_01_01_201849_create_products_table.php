@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->longText('description');
-            $table->string('brand_id')->nullable();
             $table->string('image')->nullable();
             $table->longText('short_description')->nullable();
             $table->string('regular_price')->nullable();
@@ -26,7 +25,8 @@ return new class extends Migration
             $table->string('quantity')->nullable();
             $table->string('stock_status')->nullable();
             $table->string('featured')->nullable();
-            $table->string('product_category_id')->nullable();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('brand_id')->nullable()->references('id')->on('brands')->cascadeOnDelete();
             $table->timestamps();
         });
     }
