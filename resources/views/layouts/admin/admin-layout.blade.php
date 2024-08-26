@@ -50,6 +50,7 @@
     <script src="{{ asset('assets/admin/js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/admin/js/apexcharts/apexcharts.js') }}"></script>
     <script src="{{ asset('assets/admin/js/main.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/custom.js') }}"></script>
     <script>
         (function ($) {
 

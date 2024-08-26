@@ -59,14 +59,13 @@
                     <fieldset class="category">
                         <div class="body-title mb-10">Category <span class="tf-color-1">*</span>
                         </div>
-                        <div class="select">
-                            <select class="" name="product_category_id">
+                        <div class="chose">
+                            {{-- <select id="multiSelect" class="" name="product_category_id"> --}}
+                            {{-- <select class="form-multi-select" id="multiSelect" multiple data-coreui-search="true">
                                 <option>Choose category</option>
-                                <option value="1">Category1</option>
-                                <option value="2">Category2</option>
-                                <option value="3">Category3</option>
-                                <option value="4">Category4</option>
-                            </select>
+                                {!! $categories !!}
+                            </select> --}}
+                            {!! $categories !!}
                         </div>
                         @error('product_category_id')
                             <div class="text-tiny text-danger">{{$message}}</div>

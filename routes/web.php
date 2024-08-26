@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Middleware\IsUserAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,10 @@ Route::middleware([IsUserAdmin::class, 'auth'])->group(function(){
     Route::get('/admin/brands/', [BrandController::class, 'index'])->name('admin.brands');
     Route::get('/admin/brands/add', [BrandController::class, 'create'])->name('admin.brands.add');
     Route::post('/admin/brands/store', [BrandController::class, 'store'])->name('admin.brands.store');
+
+    Route::get('/admin/cateogry/all', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::get('/admin/cateogry/add', [CategoryController::class, 'create'])->name('admin.category.add');
+    Route::post('/admin/cateogry/add', [CategoryController::class, 'store'])->name('admin.category.store');
 });
 
 require __DIR__.'/auth.php';
