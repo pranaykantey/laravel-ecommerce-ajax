@@ -70,7 +70,9 @@
                                     <td>{{$product->regular_price}}</td>
                                     <td>{{$product->sale_price}}</td>
                                     <td>{{$product->SKU}}</td>
-                                    <td>Category3</td>
+                                    <td><ul class="category-list d-flex list-unstyled">@foreach ($product->category as $category)
+                                        <li>{{$category->name}}</li>
+                                    @endforeach</ul></td>
                                     <td>@if ($product->brand)
                                         {{ $product->brand->name }}
                                     @endif</td>

@@ -63,7 +63,9 @@
                                         @endforeach
                                     @endif
                                 @endforeach --}}
-                                {!! $categories !!}
+                                @if (isset( $categories ))
+                                    {!! $categories !!}
+                                @endif
                             </select>
                         </div>
                     </fieldset>

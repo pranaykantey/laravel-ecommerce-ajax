@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.categories');
+        $category = Category::all();
+        return view('admin.category.categories', compact('category'));
     }
 
     /**
@@ -39,7 +40,7 @@ class CategoryController extends Controller
 
         $categories = $this->getAllCatsAsHtml();
         // dd($categories);
-        return view('admin.add-category', compact('categories'));
+        return view('admin.category.add-category', compact('categories'));
     }
 
     /**
@@ -76,7 +77,10 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        // $categories = $this->getAllCatsAsHtml();
+        $categories = Category::all();
+        $catSingle = $category;
+        return view('admin.category.edit-category', compact('catSingle','categories'));
     }
 
     /**
@@ -90,9 +94,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, Request $request)
     {
-        //
+        // $category->delete();
+        if( $request->ajax() ) {
+            return response()->json(['message'=> $request->data ]);
+        }
+        return response()->json(['message'=>'Deleted Successfylly']);
     }
 
     public function getAllCatsAsHtml() {

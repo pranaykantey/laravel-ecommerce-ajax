@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class BrandController extends Controller
 {
@@ -13,7 +14,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::orderBy('id', 'DESC')->get();
-        return view('admin.brands', compact('brands'));
+        return view('admin.brand.brands', compact('brands'));
     }
 
     /**
@@ -21,7 +22,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view('admin.add-brand');
+        return view('admin.brand.add-brand');
     }
 
     /**
@@ -31,12 +32,19 @@ class BrandController extends Controller
     {
         $fields = $request->validate([
             'name'          => ['required'],
-            'slug'          => ['required','unique:brands'],
-            'image'         => ['required'],
+            'slug'          => ['required', 'unique:brands'],
+            'image'         => ['nullable'],
         ]);
+
+        if( !empty($fields['image']) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $fields['image'] = 'images/'.$imageName;
+        }
+
         $brand = Brand::create($fields);
-        
-        return response()->json(['message'=>'Brand Added Successfully']);
+
+        return response()->json(['message' => 'Brand Added Successfully']);
     }
 
     /**
@@ -50,9 +58,18 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Brand $brand)
+    public function edit($id, Request $request)
     {
-        //
+        $brand = Brand::find($id);
+        if( $request->ajax() ) {
+            if ($brand) {
+                return response()->json([
+                    'status' => 200,
+                    'html' => view('admin.brand.parts.ajax-edit', compact('brand'))->render()
+                ]);
+            }
+        }
+        return view('admin.brand.edit-brand', compact('brand'));
     }
 
     /**
@@ -60,7 +77,39 @@ class BrandController extends Controller
      */
     public function update(Request $request, Brand $brand)
     {
-        //
+        $fields = $request->validate([
+            'name'      => ['required'],
+            'slug'      => ['required'],
+            'image'     => ['nullable']
+        ]);
+
+        if( !empty( $fields['image'] ) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $fields['image']    = 'images/'.$imageName;
+
+            // Dont work. optional feature delete image.
+            // if( File::exists($request->image) ) {
+            //     File::delete($request->image);
+            // }
+        }
+
+        // $image_path = "/images/filename.ext";  // Value is not URL but directory file path
+        // if(File::exists($image_path)) {
+        //     File::delete($image_path);
+        // }
+
+
+        if( $brand->update($fields) ) {
+            $brands = Brand::all();
+            return response()->json([
+                'status' => 200,
+                'html' => view('admin.brand.parts.ajax-table', compact('brands'))->render()
+            ]);
+        }
+
+
+        // return view('admin.brand.table', compact('brands'));
     }
 
     /**
@@ -68,6 +117,13 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        if( $brand->delete() ) {
+            $brands = Brand::all();
+            return response()->json([
+                'status'    => 200,
+                'html'      => view('admin.brand.parts.ajax-table', compact('brands'))->render(),
+                'message'   => 'Deleted Succesfully',
+            ]);
+        }
     }
 }

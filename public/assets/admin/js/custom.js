@@ -46,5 +46,12 @@
             search: true
         })
         }
+
+        $(document).on('click','.delete-brand', function() {
+            $(this).siblings('.show-hide').show();
+        });
+        $(document).on('click','.no', function() {
+            $(this).closest('.show-hide').hide();
+        });
     });
 }(jQuery));

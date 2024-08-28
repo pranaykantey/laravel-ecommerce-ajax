@@ -1,3 +1,8 @@
+/*******************************************************
+********************************************************
+****   Started styling after laravel installation   ****
+********************************************************
+********************************************************/
 .alert.alert-danger {
 	border-radius: 25px;
 	padding-left: 28px;
@@ -31,3 +36,33 @@
     margin-right: 5px;
 }
 
+/* modal style */
+.modal-dialog {
+	max-width: 1200px;
+	position: relative;
+	box-shadow: 0 0 150px 0 black;
+	border-radius: 35px;
+	overflow: hidden;
+}
+.modal-content > .btn-close {
+	position: absolute;
+	right: 25px;
+	top: 25px;
+    z-index: 999;
+}
+.modal-backdrop {
+    width: 100%;
+    height: 100%;
+}
+
+/* delete modal */
+.show-hide {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: #e4e1e1;
+	width: 100%;
+	padding: 4px;
+    display: none;
+    z-index: 9999;
+}
