@@ -40,8 +40,8 @@ class Category extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    // public function productRel(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(ProductCategoryRel::class);
-    // }
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class,'product_category_rels');
+    }
 }

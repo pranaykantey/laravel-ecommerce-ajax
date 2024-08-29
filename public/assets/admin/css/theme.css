@@ -21,19 +21,23 @@
 	display: flex;
 	align-items: center;
 }
-.catgory-ul {
+.category .chose {
 	max-height: 100px;
 	overflow-y: scroll;
 	padding: 5px 5px;
 	border: 1px solid #ededed;
 	border-radius: 7px;
 }
-.catgory-ul li {
+.category .chose li {
     font-size: 18px;
     margin-bottom: 4px;
 }
-.catgory-ul li input{
+.category .chose li input{
     margin-right: 5px;
+}
+.category .chose {
+	max-height: 130px;
+	overflow-y: scroll;
 }
 
 /* modal style */
@@ -57,12 +61,15 @@
 
 /* delete modal */
 .show-hide {
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: #e4e1e1;
-	width: 100%;
-	padding: 4px;
+	top: 50%;
+	left: 50%;
+	position: fixed;
+	transform: translate(-50%, -50%);
+	width: 700px;
+	padding: 40px;
+	background: white;
+	border: 1px solid whitesmoke;
+	box-shadow: 0 0 12px 0 #0000003d;
+	z-index: 999;
     display: none;
-    z-index: 9999;
 }

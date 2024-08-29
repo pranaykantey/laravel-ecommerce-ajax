@@ -13,7 +13,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::orderBy('id', 'DESC')->get();
+        $brands = Brand::withCount('products')->orderBy('id', 'DESC')->get();
         return view('admin.brand.brands', compact('brands'));
     }
 
@@ -61,6 +61,7 @@ class BrandController extends Controller
     public function edit($id, Request $request)
     {
         $brand = Brand::find($id);
+        // $brands = Brand::withCount('products')->orderBy('id', 'DESC')->get();
         if( $request->ajax() ) {
             if ($brand) {
                 return response()->json([
@@ -101,7 +102,8 @@ class BrandController extends Controller
 
 
         if( $brand->update($fields) ) {
-            $brands = Brand::all();
+            // $brands = Brand::all();
+            $brands = Brand::withCount('products')->orderBy('id', 'DESC')->get();
             return response()->json([
                 'status' => 200,
                 'html' => view('admin.brand.parts.ajax-table', compact('brands'))->render()
@@ -118,7 +120,7 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         if( $brand->delete() ) {
-            $brands = Brand::all();
+            $brands = $brands = Brand::withCount('products')->orderBy('id', 'DESC')->get();
             return response()->json([
                 'status'    => 200,
                 'html'      => view('admin.brand.parts.ajax-table', compact('brands'))->render(),

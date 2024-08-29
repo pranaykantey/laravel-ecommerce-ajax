@@ -31,7 +31,7 @@ class ProductController extends Controller
     public function create()
     {
         $brands = Brand::orderBy('id', 'DESC')->get();
-        $categories = $this->getAllCatsAsHtml();
+        $categories = Category::doesntHave('parent')->with(['parent', 'childs'])->orderBy('id', 'DESC')->get();
         return view('admin.product.add-product', compact('brands', 'categories'));
     }
 
@@ -62,20 +62,33 @@ class ProductController extends Controller
         // $fields['brand_name']       = '';
         $fields['user_id']          = (NULL != Auth::id()) ? Auth::id() : 1;
 
+        if( !empty( $request->image ) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move( public_path('images/products'), $imageName);
+            $fields['image'] = 'images/products/'. $imageName;
+        }
+
         $productCreate = Product::create($fields);
+
+
+        // return response()->json(['message' => dd( $fields['product_category_id'] )]);
+
         if (isset($fields['product_category_id'])) {
             if (count($fields['product_category_id']) > 0) {
+
+
+                // $productCreate->category()->sync(array_values($fields['product_category_id']));
+
                 foreach ($fields['product_category_id'] as $cat) {
-                    // return var_dump(intVal($cat));
+                    /* // return var_dump(intVal($cat));
                     // $productCreate->category()->create([
                     //     'product_id'    => $productCreate->id,
                     //     'category_id'   => intVal($cat)
-                    // ]);
-                    // ProductCategoryRel::create([
-                    //     'product_id'    => $productCreate->id,
-                    //     'category_id'   => intVal($cat)
-                    // ]);
-                    $productCreate->category()->sync(intVal($cat));
+                    // ]); */
+                    ProductCategoryRel::create([
+                        'product_id'    => $productCreate->id,
+                        'category_id'   => intVal($cat)
+                    ]);
                 }
             }
         }
@@ -102,7 +115,17 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $brands = Brand::orderBy('id', 'DESC')->get();
+        // $product = Product::find($product->id);
+        // $categories = Category::orderBy('id', 'DESC')->get();
+        $categories = Category::doesntHave('parent')->with(['parent', 'childs'])->orderBy('id', 'DESC')->get();
+        $product = Product::with(['category'])->find($product->id);
+        if( request()->ajax() ) {
+            return response()->json([
+                'status'        => 200,
+                'html'          => view('admin.product.parts.edit-product', compact(['product', 'brands', 'categories']))->render()
+            ]);
+        }
     }
 
     /**
@@ -110,7 +133,36 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $fields = $request->validate([
+            'title'                 =>  ['required'],
+            'slug'                  =>  ['required'],
+            'description'           =>  ['required'],
+            'image'                 =>  ['nullable'],
+            'short_description'     =>  ['required'],
+            'regular_price'         =>  ['required'],
+            'sale_price'            =>  ['nullable'],
+            'images'                =>  ['nullable'],
+            'SKU'                   =>  ['nullable'],
+            'quantity'              =>  ['nullable'],
+            'stock_status'          =>  ['nullable'],
+            'featured'              =>  ['nullable'],
+            'product_category_id'   =>  ['nullable'],
+            'brand_id'              =>  ['nullable'],
+        ]);
+
+
+        if( !empty( $request->image ) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move( public_path('images/products'), $imageName);
+            $fields['image'] = 'images/products/'. $imageName;
+        }
+
+        $product->update($fields);
+        $products = Product::with(['user', 'brand', 'category'])->orderBy('id', 'DESC')->get();
+        return response()->json([
+            'status'    => 200,
+            'html'      => view('admin.product.parts.table', compact('products'))->render()
+        ]);
     }
 
     /**
@@ -118,7 +170,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        
+        $products = Product::with(['user', 'brand', 'category'])->orderBy('id', 'DESC')->get();
+        return response()->json([
+            'status'    => 200,
+            'html'      => view('admin.product.parts.table', compact('products'))->render()
+        ]);
     }
 
     /**

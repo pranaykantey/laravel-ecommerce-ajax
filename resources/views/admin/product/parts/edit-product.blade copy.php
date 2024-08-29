@@ -1,11 +1,8 @@
-<x-admin-layout>
-
-<!-- main-content-wrap -->
 <div class="main-content-inner">
     <!-- main-content-wrap -->
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-            <h3>Add Product</h3>
+            <h3>Edit {{$product->name}}</h3>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li>
                     <a href="index-2.html">
@@ -30,8 +27,8 @@
         </div>
         <div class="success-message"></div>
         <!-- form-add-product -->
-        <form class="tf-section-2 form-add-product" id="add_product" method="POST" enctype="multipart/form-data"
-            action="{{ route('admin.product.store') }}">
+        <form data-url="" class="tf-section-2 form-add-product main_post_update_form" id="add_product" method="POST" enctype="multipart/form-data"
+            action="javascript:">
             @csrf
             {{-- <input type="hidden" name="_token" value="8LNRTO4LPXHvbK2vgRcXqMeLgqtqNGjzWSNru7Xx"
                 autocomplete="off"> --}}
@@ -40,7 +37,7 @@
                     <div class="body-title mb-10">Product name <span class="tf-color-1">*</span>
                     </div>
                     <input class="mb-10" type="text" placeholder="Enter product name"
-                        name="title" tabindex="0" value="" >
+                        name="title" tabindex="0" value="{{$product->title}}" >
                     @error('title')
                         <div class="text-tiny text-danger">{{$message}}</div>
                     @enderror
@@ -49,7 +46,7 @@
                 <fieldset class="name">
                     <div class="body-title mb-10">Slug <span class="tf-color-1">*</span></div>
                     <input class="mb-10" type="text" placeholder="Enter product slug"
-                        name="slug" tabindex="0" value="" >
+                        name="slug" tabindex="0" value="{{$product->slug}}" >
                         @error('slug')
                             <div class="text-tiny text-danger">{{$message}}</div>
                         @enderror
@@ -60,30 +57,40 @@
                         <div class="body-title mb-10">Category <span class="tf-color-1">*</span>
                         </div>
                         <div class="chose">
+
+                            {{-- <select id="multiSelect" class="" name="product_category_id"> --}}
                             <ul class="form-multi-select" id="multiSelect" multiple data-coreui-search="true">
                                 <li>None</li>
                                 @foreach ($categories as $category)
+                                @php
+                                echo '<pre>';
+                                var_dump( $product->category->toArray() );
+                                echo '</pre>';
+                                // tennia
+// array_search('sports', array_column($product->category->toArray()[0], 'slug'))
+                                echo $category->slug;
+                            @endphp
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="product_category_id['{{$category->id}}']" value="{{$category->id}}'"> {{$category->name}}
+                                        <input @checked(array_search($category->slug, array_column($product->category->toArray(), 'slug'))) type="checkbox" name="product_category_id['{{$category->id}}']" value="{{$category->id}}'"> {{$category->name}}
                                     </label>
                                 </li>
                                 @foreach ($category->childs as $child)
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="product_category_id['{{$child->id}}']" value="{{$child->id}}'"> - {{$child->name}}
+                                        <input @checked(array_search($child->slug, array_column($product->category->toArray(), 'slug'))) type="checkbox" name="product_category_id['{{$child->id}}']" value="{{$child->id}}'"> - {{$child->name}}
                                     </label>
                                 </li>
                                 @foreach ($child->childs as $kids)
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="product_category_id['{{$kids->id}}']" value="{{$kids->id}}'"> - - {{$kids->name}}
+                                        <input @checked(array_search($kids->slug, array_column($product->category->toArray(), 'slug'))) type="checkbox" name="product_category_id['{{$kids->id}}']" value="{{$kids->id}}'"> - - {{$kids->name}}
                                     </label>
                                 </li>
                                 @foreach ($kids->childs as $kid)
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="product_category_id['{{$kid->id}}']" value="{{$kid->id}}'"> - - - {{$kid->name}}
+                                        <input @checked(array_search($kid->slug, array_column($product->category->toArray(), 'slug'))) type="checkbox" name="product_category_id['{{$kid->id}}']" value="{{$kid->id}}'"> - - - {{$kid->name}}
                                     </label>
                                 </li>
                                 @endforeach
@@ -251,7 +258,7 @@
                     </fieldset>
                 </div>
                 <div class="cols gap10">
-                    <button id="add_product_submit" class="tf-button w-full" type="submit">Add product</button>
+                    <button id="add_product_submit" class="tf-button w-full update_post_button" type="submit">Add product</button>
 
                 </div>
                 {{-- <div class="success-message"></div> --}}
@@ -261,46 +268,3 @@
     </div>
     <!-- /main-content-wrap -->
 </div>
-<!-- /main-content-wrap -->
-
-<script>
-    (function($){
-        $(document).ready(function(){
-            $('#add_product').on('submit',function(e){
-                e.preventDefault();
-                form = $('#add_product')[0];
-                data = new FormData(form);
-
-                $('#add_product_submit').attr('disabled', 'disabled');
-
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('admin.product.store') }}",
-                    data: data,
-                    processData: false,
-                    contentType: false,
-                    success: function(e){
-                        $('.success-message').html('<h4 class="alert alert-success">'+e.message+' !!!</h4>');
-                        $('#add_product_submit').removeAttr('disabled');
-
-                        console.log( e );
-                    },
-                    error: function(e) {
-
-                        if( e.responseJSON.errors ) {
-                            $.each(e.responseJSON.errors, function(k, v){
-                                $('.success-message').append('<h4 class="alert alert-danger">'+v+'</h4>');
-                            });
-                        } else if( e.responseJSON.message.length > 0 ) {
-                            $('.success-message').append('<h4 class="alert alert-danger">'+e.responseJSON.message+'</h4>');
-                        }
-                        // console.log( e.responseJSON.message.length );
-
-                        $('#add_product_submit').removeAttr('disabled');
-                    }
-                });
-            });
-        });
-    }(jQuery));
-</script>
-</x-admin-layout>

@@ -37,7 +37,7 @@
                 </div>
                 <div class="wg-table table-all-user">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered brand-table">
+                        <table class="table table-striped table-bordered brand-table main-data-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -52,6 +52,7 @@
                                 dd($brands);
                             @endphp --}}
                                 @foreach ($brands as $key => $brand)
+                                {{-- @dd($brand->products) --}}
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td class="pname">
@@ -63,27 +64,28 @@
                                             </div>
                                         </td>
                                         <td>{{ $brand->slug }}</td>
-                                        <td><a href="#" target="_blank">1</a></td>
-                                        <td style="position: relative">
+                                        <td><a href="#" target="_blank">{{$brand->products_count}}</a></td>
+                                        <td>
                                             <div class="list-icon-function">
-                                                <a class="edit-brand" href="javascript:"
+                                                <a class="edit-brand edit_post_button" href="javascript:"
                                                     data-url="{{ route('admin.brands.edit', $brand->id) }}">
                                                     <div class="item edit">
                                                         <i class="icon-edit-3"></i>
                                                     </div>
                                                 </a>
-                                                <a class="delete-brand" href="javascript:">
+                                                <a class="delete-brand delete-open" href="javascript:">
                                                     <div class="item edit">
                                                         <i class="icon-trash-2"></i>
                                                     </div>
                                                 </a>
                                                 <div class="show-hide">
                                                     Are you sure? You want to delete. <span class="text-danger">{{$brand->name}}</span>
-                                                    <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST" id="delete_brand" data-url="{{route('admin.brands.destroy', $brand->id)}}">
+                                                    <form class="main_post_delete_form" action="javascript:" method="POST" id="delete_brand" data-url="{{route('admin.brands.destroy', $brand->id)}}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <div class="item text-danger delete">
-                                                            <span class="text-primary no small">No</span><button class="text-danger" type="submit">Yes</button>
+                                                            <span class="btn btn-primary btn-large no">No</span>
+                                                            <button class="delete-button btn btn-danger btn-large yes" type="submit">Yes</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -105,32 +107,9 @@
     </div>
     <!-- Button to Open the Modal -->
 
-    <!-- The Modal -->
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                <!-- Modal Header -->
-                {{-- <div class="modal-header">
-          <h4 class="modal-title">Edit Post</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div> --}}
 
-                <!-- Modal body -->
-                <div class="modal-body" id="modal-content">
-                    Modal body..
-                </div>
 
-                <!-- Modal footer -->
-                {{-- <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div> --}}
-
-            </div>
-        </div>
-    </div>
-
-    <script>
+    {{-- <script>
         // 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         (function($) {
             $(document).ready(function() {
@@ -221,5 +200,5 @@
                 });
             });
         }(jQuery));
-    </script>
+    </script> --}}
 </x-admin-layout>

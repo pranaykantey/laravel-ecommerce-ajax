@@ -2,30 +2,30 @@
     <div class="main-content-inner">
         <div class="main-content-wrap">
             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                <h3>Edit <small class="text-warning">- {{$brand->name}}</small></h3>
+                <h3>Edit <small class="text-warning">- {{$category->name}}</small></h3>
             </div>
-            {{-- {{ $brand->name }} --}}
+            {{-- {{ $category->name }} --}}
             <!-- new-category -->
             <div class="wg-box">
                 <div class="success-message"></div>
-                <form id="update_brand" data-url="{{route('admin.brands.update', $brand->id)}}" class="form-new-product form-style-1 main_post_update_form" action="javascript:" method="POST" enctype="multipart/form-data">
+                <form id="update_cateogry" data-url="{{route('admin.category.update', $category->id)}}" class="form-new-product main_post_update_form form-style-1" method="POST" enctype="multipart/form-data">
                     @csrf
                     <fieldset class="name">
-                        <div class="body-title">Brand Name <span class="tf-color-1">*</span></div>
+                        <div class="body-title">Category Name <span class="tf-color-1">*</span></div>
                         <input class="flex-grow" type="text" placeholder="Brand name" name="name"
-                            tabindex="0" value="{{$brand->name}}"  >
+                            tabindex="0" value="{{$category->name}}"  >
                     </fieldset>
                     <fieldset class="name">
-                        <div class="body-title">Brand Slug <span class="tf-color-1">*</span></div>
+                        <div class="body-title">Category Slug <span class="tf-color-1">*</span></div>
                         <input class="flex-grow" type="text" placeholder="Brand Slug" name="slug"
-                            tabindex="0" value="{{$brand->slug}}"  >
+                            tabindex="0" value="{{$category->slug}}"  >
                     </fieldset>
                     <fieldset>
-                        <div class="body-title">Upload images <span class="tf-color-1">*</span>
+                        <div class="body-title">Cateogry Image<span class="tf-color-1">*</span>
                         </div>
                         <div class="upload-image flex-grow">
                             <div class="item" id="imgpreview">
-                                <img src="{{asset($brand->image)}}" class="effect8" alt="">
+                                <img src="{{asset($category->image)}}" class="effect8" alt="">
                             </div>
                             <div id="upload-file" class="item up-load">
                                 <label class="uploadfile" for="myFile">
@@ -42,7 +42,7 @@
 
                     <div class="bot">
                         <div></div>
-                        <button id="update_brand_submit" class="tf-button w208 update_post_button" type="submit">Save</button>
+                        <button id="update_category_submit" class="tf-button w208 update_post_button" type="submit">Save</button>
                     </div>
                 </form>
             </div>

@@ -33,11 +33,11 @@
                             </div>
                         </form>
                     </div>
-                    <a class="tf-button style-1 w208" href="add-category.html"><i
+                    <a class="tf-button style-1 w208" href="{{route('admin.category.add')}}"><i
                             class="icon-plus"></i>Add new</a>
                 </div>
                 <div class="wg-table table-all-user">
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered main-data-table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -54,28 +54,37 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td class="pname">
                                     <div class="image">
-                                        <img src="1718066463.html" alt="" class="image">
+                                        <img src="{{asset($value->image)}}" alt="" class="{{$value->slug}}">
                                     </div>
                                     <div class="name">
                                         <a href="#" class="body-title-2">{{$value->name}}</a>
                                     </div>
                                 </td>
                                 <td>{{$value->slug}}</td>
-                                <td><a href="#" target="_blank">2</a></td>
+                                <td><a href="#" target="_blank">{{$value->products_count}}</a></td>
                                 <td>
                                     <div class="list-icon-function">
-                                        <a href="{{ route('admin.category.edit', $value->id)}}">
+                                        <a class="edit_post_button" data-url="{{ route('admin.category.edit', $value->id)}}" href="javascript:">
                                             <div class="item edit">
                                                 <i class="icon-edit-3"></i>
                                             </div>
                                         </a>
-                                        <form class="delete-form" id="delete_form" action="{{route('admin.category.delete',$value->id)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <div class="item text-danger delete">
-                                                <button class="delete-button" data-delete-id="{{ $value->id }}" id="delete_button" type="submit"><i class="icon-trash-2"></i></button>
+                                        <a class="delete-brand delete-open" href="javascript:">
+                                            <div class="item edit">
+                                                <i class="icon-trash-2"></i>
                                             </div>
-                                        </form>
+                                        </a>
+                                        <div class="show-hide">
+                                            Are you sure? You want to delete. <span class="text-danger">{{$value->name}}</span>
+                                            <form class="main_post_delete_form" id="delete_form" data-url="{{route('admin.category.delete',$value->id)}}" action="javascript:" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <div class="item text-danger delete">
+                                                    <span class="btn btn-primary no">No</span>
+                                                    <button class="delete-button btn btn-danger yes" id="delete_button" type="submit">Yes</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -92,7 +101,9 @@
         </div>
     </div>
 
-<script>
+
+
+{{-- <script>
     (function($){
         $(document).ready(function(){
             $('.delete-button').on('click', function(e){
@@ -141,49 +152,6 @@
 
 
             });
-            // $('#add_form').on('submit',function(e){
-            //     e.preventDefault();
-
-            //     form = {!! isset( $value ) ? $value : ''; !!}
-            //     // data = new FormData(form);
-            //     data = form;
-
-            //     $('.success-message').html('');
-
-            //     $('#add_button').attr('disabled', 'disabled');
-
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: "{{ route('admin.category.delete', 'id') }}",
-            //         data: data,
-            //         processData: false,
-            //         contentType: false,
-            //         success: function(e){
-            //             $('.success-message').html('<h4 class="alert alert-success">'+e.message+' !!!</h4>');
-            //             $('#add_button').removeAttr('disabled');
-
-            //             // categoryRearrange(e.categories);
-            //             $('.category-box select').html(e.categories);
-            //             // console.log(e.categories);
-            //             // console.log( e );
-            //         },
-            //         error: function(e) {
-
-            //             if( e.responseJSON.errors ) {
-            //                 $.each(e.responseJSON.errors, function(k, v){
-            //                     $('.success-message').append('<h4 class="alert alert-danger">'+v+'</h4>');
-            //                 });
-            //             } else if( e.responseJSON.message.length > 0 ) {
-            //                 $('.success-message').append('<h4 class="alert alert-danger">'+e.responseJSON.message+'</h4>');
-            //             }
-            //             // console.log( e.responseJSON.message.length );
-
-            //             $('#add_button').removeAttr('disabled');
-            //         }
-            //     });
-            // });
-
-
             function categoryRearrange(cats) {
                 let h = '';
                 h += '<select name="parent_id" id="parent_id"><option value="">None</option>';
@@ -192,5 +160,5 @@
             }
         });
     }(jQuery));
-</script>
+</script> --}}
 </x-admin-layout>

@@ -21,19 +21,31 @@
             </div>
         </td>
         <td>{{$brand->slug}}</td>
-        <td><a href="#" target="_blank">1</a></td>
+        <td><a href="#" target="_blank">{{$brand->products_count}}</a></td>
         <td>
             <div class="list-icon-function">
-                <a class="edit-brand" href="javascript:" data-url="{{route('admin.brands.edit', $brand->id)}}">
+                <a class="edit-brand edit_post_button" href="javascript:"
+                    data-url="{{ route('admin.brands.edit', $brand->id) }}">
                     <div class="item edit">
                         <i class="icon-edit-3"></i>
                     </div>
                 </a>
-                <form action="#" method="POST">
-                    <div class="item text-danger delete">
+                <a class="delete-brand delete-open" href="javascript:">
+                    <div class="item edit">
                         <i class="icon-trash-2"></i>
                     </div>
-                </form>
+                </a>
+                <div class="show-hide">
+                    Are you sure? You want to delete. <span class="text-danger">{{$brand->name}}</span>
+                    <form class="main_post_delete_form" action="javascript:" method="POST" id="delete_brand" data-url="{{route('admin.brands.destroy', $brand->id)}}">
+                        @csrf
+                        @method('DELETE')
+                        <div class="item text-danger delete">
+                            <span class="btn btn-primary btn-large no">No</span>
+                            <button class="delete-button btn btn-danger btn-large yes" type="submit">Yes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </td>
     </tr>

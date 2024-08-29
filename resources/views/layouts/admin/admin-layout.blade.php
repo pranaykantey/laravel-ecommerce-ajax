@@ -3,7 +3,7 @@
 
 <head>
     <title>{{ config('app.name', 'Laravel') }}</title>
-    
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <meta charset="utf-8">
@@ -38,6 +38,20 @@
                         {{ $slot }}
 
 
+                        <!-- The Modal -->
+                        <div id="modal-main" class="main-post-modal modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body" id="modal-content">
+                                        modal content will be generated form ajax.
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                         <div class="bottom-page">
                             <div class="body-text">Copyright © 2024 Pranay</div>
                         </div>

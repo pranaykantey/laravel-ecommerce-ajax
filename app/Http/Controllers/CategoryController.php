@@ -12,7 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::all();
+        $category = Category::withCount('products')->orderBy('id','DESC')->get();
         return view('admin.category.categories', compact('category'));
     }
 
@@ -21,25 +21,7 @@ class CategoryController extends Controller
      */
     public function create(Category $category)
     {
-        // $categories = Category::with(['parent','childs'])->orderBy('id', 'ASC')->get();
-        // $categories = Category::doesntHave('parent')->with(['parent','childs'])->orderBy('id', 'ASC')->get();
-
-
-        // $categories = '';
-        // foreach($categoriesGet as $category) {
-        //     // dd($category->name);
-        //     if( !$category->parent_id ) {
-        //         $categories .= '<option value="'.$category->id.'">'.$category->name.'</option>';
-        //         if( count($category->childs) > 0 ) {
-        //             foreach( $category->childs as $child ) {
-        //                 $categories .= '<option value="'.$child->id.'"> - '.$child->name.'</option>';
-        //             }
-        //         }
-        //     }
-        // }
-
-        $categories = $this->getAllCatsAsHtml();
-        // dd($categories);
+        $categories = Category::withCount('products')->orderBy('id','DESC')->get();
         return view('admin.category.add-category', compact('categories'));
     }
 
@@ -55,13 +37,20 @@ class CategoryController extends Controller
             'parent_id' => ['nullable']
         ]);
 
-        Category::create($fields);
+        if( !empty($request->image) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $fields['image'] = 'images/'.$imageName;
+        }
 
+        Category::create($fields);
         // $categoriesGet = Category::doesntHave('parent')->with(['parent','childs'])->orderBy('id', 'ASC')->get();
-        $categories = $this->getAllCatsAsHtml();
+        $categories = Category::withCount('products')->orderBy('id','DESC')->get();;
         // dd($categories);
-        return response()->json(['message'=>'Category Added Successfully','categories'=>
-        $categories]);
+        return response()->json([
+            'status'    => 200,
+            'html'      => view('admin.category.parts.select-box', compact('categories'))->render()
+        ]);
     }
 
     /**
@@ -75,11 +64,17 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Category $category, Request $request)
     {
-        // $categories = $this->getAllCatsAsHtml();
         $categories = Category::all();
         $catSingle = $category;
+        // $categories = $this->getAllCatsAsHtml();
+        if( $request->ajax() ) {
+            return response()->json([
+                'status'    => 200,
+                'html'      => view('admin.category.parts.form', compact('category'))->render()
+            ]);
+        }
         return view('admin.category.edit-category', compact('catSingle','categories'));
     }
 
@@ -88,7 +83,27 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $fields = $request->validate([
+            'name'      => ['required'],
+            'slug'      => ['required'],
+            'image'     => ['nullable']
+        ]);
+
+        if( !empty($request->image) ) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $fields['image'] = 'images/'.$imageName;
+        }
+
+        if( $request->ajax() ) {
+            $category->update($fields);
+            $categories = Category::withCount('products')->orderBy('id','DESC')->get();
+            // $categories = Category::withCount('products')->orderBy('id','DESC')->get();
+            return response()->json([
+                'status'        => 200,
+                'html'          => view('admin.category.parts.table', compact('categories'))->render()
+            ]);
+        }
     }
 
     /**
@@ -96,36 +111,42 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category, Request $request)
     {
-        // $category->delete();
         if( $request->ajax() ) {
-            return response()->json(['message'=> $request->data ]);
+
+            $category->delete();
+
+            $categories = Category::withCount('products')->orderBy('id', 'DESC')->get();
+            return response()->json([
+                'status'    => 200,
+                'html'      => view('admin.category.parts.table', compact('categories'))->render()
+            ]);
         }
-        return response()->json(['message'=>'Deleted Successfylly']);
+
     }
 
-    public function getAllCatsAsHtml() {
-        $categoriesGet = Category::doesntHave('parent')->with(['parent','childs'])->orderBy('id', 'ASC')->get();
-        $categories = '<option value="">None</option>';
-        foreach($categoriesGet as $category) {
-            if( !$category->parent_id ) {
-                $categories .= '<option value="'.$category->id.'">'.$category->name.'</option>';
-                if( $category->childs ) {
-                    foreach( $category->childs as $child ) {
-                        $categories .= '<option value="'.$child->id.'"> - '.$child->name.'</option>';
-                        if( $child->childs ) {
-                            foreach( $child->childs as $kids ) {
-                                $categories .= '<option value="'.$kids->id.'"> - - '.$kids->name.'</option>';
-                                if( $kids->childs ) {
-                                    foreach( $kids->childs as $gkids ) {
-                                        $categories .= '<option disabled="disabled" value="'.$gkids->id.'"> - - - '.$gkids->name.'</option>';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $categories;
-    }
+    // public function getAllCatsAsHtml() {
+    //     $categoriesGet = Category::doesntHave('parent')->with(['parent','childs'])->orderBy('id', 'ASC')->get();
+    //     $categories = '<option value="">None</option>';
+    //     foreach($categoriesGet as $category) {
+    //         if( !$category->parent_id ) {
+    //             $categories .= '<option value="'.$category->id.'">'.$category->name.'</option>';
+    //             if( $category->childs ) {
+    //                 foreach( $category->childs as $child ) {
+    //                     $categories .= '<option value="'.$child->id.'"> - '.$child->name.'</option>';
+    //                     if( $child->childs ) {
+    //                         foreach( $child->childs as $kids ) {
+    //                             $categories .= '<option value="'.$kids->id.'"> - - '.$kids->name.'</option>';
+    //                             if( $kids->childs ) {
+    //                                 foreach( $kids->childs as $gkids ) {
+    //                                     $categories .= '<option disabled="disabled" value="'.$gkids->id.'"> - - - '.$gkids->name.'</option>';
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return $categories;
+    // }
 }

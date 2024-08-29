@@ -49,7 +49,7 @@
                         <div class="category-box">
                             <select name="parent_id" id="parent_id">
                                 <option value="">None</option>
-                                {{-- @foreach ($categories as $category)
+                                @foreach ($categories as $category)
                                     @if (!$category->parent_id)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                         @foreach ($category->childs as $childs)
@@ -62,10 +62,10 @@
                                             @endforeach
                                         @endforeach
                                     @endif
-                                @endforeach --}}
-                                @if (isset( $categories ))
+                                @endforeach
+                                {{-- @if (isset( $categories ))
                                     {!! $categories !!}
-                                @endif
+                                @endif --}}
                             </select>
                         </div>
                     </fieldset>
@@ -118,23 +118,23 @@
                     data: data,
                     processData: false,
                     contentType: false,
-                    success: function(e){
-                        $('.success-message').html('<h4 class="alert alert-success">'+e.message+' !!!</h4>');
+                    success: function(res){
+                        $('.success-message').html('<h4 class="alert alert-success">Added Successfully !!!</h4>');
                         $('#add_button').removeAttr('disabled');
 
                         // categoryRearrange(e.categories);
-                        $('.category-box select').html(e.categories);
+                        $('.category-box').html(res.html);
                         // console.log(e.categories);
                         // console.log( e );
                     },
-                    error: function(e) {
+                    error: function(res) {
 
-                        if( e.responseJSON.errors ) {
-                            $.each(e.responseJSON.errors, function(k, v){
+                        if( res.responseJSON.errors ) {
+                            $.each(res.responseJSON.errors, function(k, v){
                                 $('.success-message').append('<h4 class="alert alert-danger">'+v+'</h4>');
                             });
-                        } else if( e.responseJSON.message.length > 0 ) {
-                            $('.success-message').append('<h4 class="alert alert-danger">'+e.responseJSON.message+'</h4>');
+                        } else if( res.responseJSON.message.length > 0 ) {
+                            $('.success-message').append('<h4 class="alert alert-danger">'+ res.responseJSON.message +'!!</h4>');
                         }
                         // console.log( e.responseJSON.message.length );
 
