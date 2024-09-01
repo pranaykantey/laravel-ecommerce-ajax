@@ -171,7 +171,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        
+
         $products = Product::with(['user', 'brand', 'category'])->orderBy('id', 'DESC')->get();
         return response()->json([
             'status'    => 200,
@@ -184,32 +184,42 @@ class ProductController extends Controller
      *
      * @return  string  Html category select
      */
-    public function getAllCatsAsHtml()
-    {
-        $categoriesGet = Category::doesntHave('parent')->with(['parent', 'childs'])->orderBy('id', 'ASC')->get();
-        // $categories = '<input type="checkbox" name="category['.$id.']" value="">None</option>';
-        $categories = '<ul class="catgory-ul">';
-        foreach ($categoriesGet as $category) {
-            if (!$category->parent_id) {
-                $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $category->id . ']" value="' . $category->id . '">' . $category->name . '</label></li>';
-                if ($category->childs) {
-                    foreach ($category->childs as $child) {
-                        $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $child->id . ']" value="' . $child->id . '"> - ' . $child->name . '</label></li>';
-                        if ($child->childs) {
-                            foreach ($child->childs as $kids) {
-                                $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $kids->id . ']" value="' . $kids->id . '"> - - ' . $kids->name . '</label></li>';
-                                if ($kids->childs) {
-                                    foreach ($kids->childs as $gkids) {
-                                        $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $gkids->id . ']"  value="' . $gkids->id . '"> - - - ' . $gkids->name . '</label></li>';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $categories .= '</ul>';
-        return $categories;
+    // public function getAllCatsAsHtml()
+    // {
+    //     $categoriesGet = Category::doesntHave('parent')->with(['parent', 'childs'])->orderBy('id', 'ASC')->get();
+    //     // $categories = '<input type="checkbox" name="category['.$id.']" value="">None</option>';
+    //     $categories = '<ul class="catgory-ul">';
+    //     foreach ($categoriesGet as $category) {
+    //         if (!$category->parent_id) {
+    //             $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $category->id . ']" value="' . $category->id . '">' . $category->name . '</label></li>';
+    //             if ($category->childs) {
+    //                 foreach ($category->childs as $child) {
+    //                     $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $child->id . ']" value="' . $child->id . '"> - ' . $child->name . '</label></li>';
+    //                     if ($child->childs) {
+    //                         foreach ($child->childs as $kids) {
+    //                             $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $kids->id . ']" value="' . $kids->id . '"> - - ' . $kids->name . '</label></li>';
+    //                             if ($kids->childs) {
+    //                                 foreach ($kids->childs as $gkids) {
+    //                                     $categories .= '<li><label><input type="checkbox" name="product_category_id[' . $gkids->id . ']"  value="' . $gkids->id . '"> - - - ' . $gkids->name . '</label></li>';
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     $categories .= '</ul>';
+    //     return $categories;
+    // }
+
+    public function shop() {
+        $products = Product::all();
+        return view('frontend.shop', compact('products'));
+    }
+
+    public function singleProduct($id) {
+        $product = Product::find($id);
+        return view('frontend.single-product', compact('product'));
     }
 }

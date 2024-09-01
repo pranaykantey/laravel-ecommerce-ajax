@@ -238,7 +238,7 @@
     <div class="container">
       <div class="header-desk header-desk_type_1">
         <div class="logo">
-          <a href="index.html">
+          <a href="{{route('home')}}">
             <img src="{{asset('assets/frontend/images/logo.png')}}" alt="My logo" class="logo__image d-block" />
           </a>
         </div>

@@ -361,17 +361,18 @@
         </div>
 
         <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
-          <div class="product-card-wrapper">
+        @foreach ($products as $product)
+        <div class="product-card-wrapper">
             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
               <div class="pc__img-wrapper">
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="assets/frontend/images/products/product_1.jpg" width="330"
+                      <a href="{{route('product.single', $product->id)}}"><img loading="lazy" src="@if (!empty($product->image)) {{$product->image}} @else /assets/frontend/demo-product.jpg @endif" width="330"
                           height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                     </div>
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="assets/frontend/images/products/product_1-1.jpg"
+                      <a href="{{route('product.single', $product->id)}}"><img loading="lazy" src="{{$product->image}}"
                           width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                     </div>
                   </div>
@@ -384,16 +385,23 @@
                       <use href="#icon_next_sm" />
                     </svg></span>
                 </div>
-                <button
-                  class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                  data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+                <a href="#" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">Add To Cart</a>
               </div>
 
               <div class="pc__info position-relative">
-                <p class="pc__category">Dresses</p>
-                <h6 class="pc__title"><a href="details.html">Cropped Faux Leather Jacket</a></h6>
+                <ul class="d-flex flex-wrap">
+                    @foreach ($product->category as $category)
+                    <li class="pc__category me-2"><a href="#">{{$category->name}}</a></li>
+                    @endforeach
+                </ul>
+                <h6 class="pc__title"><a href="{{route('product.single', $product->id)}}">{{$product->title}}</a></h6>
                 <div class="product-card__price d-flex">
-                  <span class="money price">$29</span>
+                    @if (!$product->sale_price)
+                    <span class="money price">{{$product->regular_price}}</span>
+                    @else
+                    <span class="money price"><del>${{$product->regular_price}}</del> </span>
+                    <span class="money price sale" style="margin-left: 5px; color: #000000;font-weight:bold;"> ${{$product->sale_price}}</span>
+                    @endif
                 </div>
                 <div class="product-card__review d-flex align-items-center">
                   <div class="reviews-group d-flex">
@@ -424,9 +432,11 @@
                 </button>
               </div>
             </div>
-          </div>
+        </div>
+        @endforeach
 
-          <div class="product-card-wrapper">
+
+          {{-- <div class="product-card-wrapper">
             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
               <div class="pc__img-wrapper">
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
@@ -481,9 +491,9 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
 
-          <div class="product-card-wrapper">
+          {{-- <div class="product-card-wrapper">
             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
               <div class="pc__img-wrapper">
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
@@ -824,7 +834,7 @@
                 </button>
               </div>
             </div>
-          </div>
+          </div> --}}
         </div>
 
         <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">

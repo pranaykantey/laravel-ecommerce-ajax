@@ -46,4 +46,6 @@ Route::middleware([IsUserAdmin::class, 'auth'])->group(function(){
     Route::get('/admin/cateogry/{category}/edit', [CategoryController::class, 'edit'])->name('admin.category.edit');
     Route::post('/admin/cateogry/{category}/update', [CategoryController::class, 'update'])->name('admin.category.update');
     Route::delete('/admin/cateogry/{category}/delete', [CategoryController::class, 'destroy'])->name('admin.category.delete');
+
+    Route::view('/admin/order/all', 'admin.order.order-details')->name('order.all');
 });

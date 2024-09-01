@@ -88,7 +88,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="sub-menu-item">
-                            <a href="orders.html" class="">
+                            <a href="{{route('order.all')}}" class="">
                                 <div class="text">Orders</div>
                             </a>
                         </li>
@@ -106,7 +106,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="{{route('coupons')}}" class="">
+                    <a href="#" class="">
                         <div class="icon"><i class="icon-grid"></i></div>
                         <div class="text">Coupns</div>
                     </a>

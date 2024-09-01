@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::view('/', 'frontend.index')->name('home');
-Route::view('/shop', 'frontend.shop')->name('shop');
-Route::view('/cart', 'frontend.cart')->name('cart');
+Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+Route::get('/product/{id}/product', [ProductController::class, 'singleProduct'])->name('product.single');
+Route::view('/cart', [CartController::class, 'index'])->name('cart');
+
+
+Route::get('cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+
 Route::view('/about', 'frontend.about')->name('about');
 Route::view('/contact', 'frontend.contact')->name('contact');
 
